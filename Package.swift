@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "SoundCloudPlayer",
+    name: "Reed",
     platforms: [.macOS(.v13)],
     targets: [
         .executableTarget(
-            name: "SoundCloudPlayer",
-            path: "Sources/SoundCloudPlayer"
+            name: "Reed",
+            path: "Sources/Reed"
         )
     ]
 )

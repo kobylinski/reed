@@ -11,7 +11,7 @@ enum AuthError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .missingCredentials:
-            return "No API credentials. Run sc-api-auth.mjs, then create ~/.config/soundcloudplayer/credentials.json."
+            return "No API credentials. Run sc-api-auth.mjs, then create ~/.config/reed/credentials.json."
         case .notAuthenticated:
             return "Not signed in to SoundCloud."
         case .stateMismatch:
@@ -33,7 +33,7 @@ final class SoundCloudAuth {
     private let credentials: AppCredentials
     private var tokens: TokenSet?
 
-    /// Resumed when the `soundcloudplayer://callback` URL is delivered to the app.
+    /// Resumed when the `reed://callback` URL is delivered to the app.
     private var pendingRedirect: CheckedContinuation<[String: String], Error>?
 
     var isAuthenticated: Bool { tokens != nil }
@@ -85,7 +85,7 @@ final class SoundCloudAuth {
         store(tokens)
     }
 
-    /// Called by AppDelegate when the OS hands the app a `soundcloudplayer://`
+    /// Called by AppDelegate when the OS hands the app a `reed://`
     /// URL. Idempotent — a duplicate delivery after the first is ignored, so it
     /// can never double-resume the continuation.
     func handleRedirect(_ url: URL) {

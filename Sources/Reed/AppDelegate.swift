@@ -18,7 +18,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private enum PlaySource: Equatable { case none, likes, playlist(Playlist), feed, user(SCUser) }
 
     func applicationWillFinishLaunching(_ notification: Notification) {
-        // Receive the OAuth callback (soundcloudplayer://callback?code=…). The
+        // Receive the OAuth callback (reed://callback?code=…). The
         // Apple Event handler is the reliable path for custom URL schemes;
         // `application(_:open:)` below is a belt-and-suspenders backup.
         NSAppleEventManager.shared().setEventHandler(
@@ -36,7 +36,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {
-        for url in urls where url.scheme == "soundcloudplayer" {
+        for url in urls where url.scheme == "reed" {
             auth?.handleRedirect(url)
         }
     }
@@ -407,7 +407,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private func alert(_ message: String) {
         NSApp.activate(ignoringOtherApps: true)
         let panel = NSAlert()
-        panel.messageText = "SoundCloud Player"
+        panel.messageText = "Reed"
         panel.informativeText = message
         panel.runModal()
     }

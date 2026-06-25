@@ -17,7 +17,7 @@ enum Registration {
 
     /// The redirect URI our app uses for its own login (must be registered at the
     /// portal afterwards — the API won't let us set it programmatically).
-    static let appRedirectURI = "soundcloudplayer://callback"
+    static let appRedirectURI = "reed://callback"
 
     private static var loopback: LoopbackServer?
 

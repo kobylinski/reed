@@ -18,7 +18,7 @@ jobs:
         run: ./scripts/bundle.sh
 
       - name: Zip
-        run: ditto -c -k --keepParent SoundCloudPlayer.app Reed.zip
+        run: ditto -c -k --keepParent Reed.app Reed.zip
 
       - name: Upload to release
         if: startsWith(github.ref, 'refs/tags/')

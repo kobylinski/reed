@@ -1,5 +1,5 @@
 .build/
-SoundCloudPlayer.app/
+Reed.app/
 *.xcodeproj
 .DS_Store
 

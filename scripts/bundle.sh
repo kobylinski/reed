@@ -5,27 +5,27 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-APP="$ROOT/SoundCloudPlayer.app"
-BUNDLE_ID="co.kobylinski.soundcloudplayer"
+APP="$ROOT/Reed.app"
+BUNDLE_ID="co.kobylinski.reed"
 
 echo "==> swift build -c release"
 swift build -c release --package-path "$ROOT"
-BIN="$ROOT/.build/release/SoundCloudPlayer"
+BIN="$ROOT/.build/release/Reed"
 
 echo "==> assembling $APP"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp "$BIN" "$APP/Contents/MacOS/SoundCloudPlayer"
+cp "$BIN" "$APP/Contents/MacOS/Reed"
 
 cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleExecutable</key><string>SoundCloudPlayer</string>
+    <key>CFBundleExecutable</key><string>Reed</string>
     <key>CFBundleIdentifier</key><string>${BUNDLE_ID}</string>
-    <key>CFBundleName</key><string>SoundCloudPlayer</string>
-    <key>CFBundleDisplayName</key><string>SoundCloud Player</string>
+    <key>CFBundleName</key><string>Reed</string>
+    <key>CFBundleDisplayName</key><string>Reed</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleShortVersionString</key><string>0.1.0</string>
     <key>CFBundleVersion</key><string>1</string>
@@ -37,7 +37,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
         <dict>
             <key>CFBundleURLName</key><string>${BUNDLE_ID}.oauth</string>
             <key>CFBundleURLSchemes</key>
-            <array><string>soundcloudplayer</string></array>
+            <array><string>reed</string></array>
         </dict>
     </array>
 </dict>
@@ -48,4 +48,4 @@ echo "==> ad-hoc codesign"
 codesign --force --sign - "$APP" >/dev/null 2>&1 || echo "   (codesign skipped/failed — local run still works)"
 
 echo "==> done: $APP"
-echo "    run with: open \"$APP\"   (or)   \"$APP/Contents/MacOS/SoundCloudPlayer\""
+echo "    run with: open \"$APP\"   (or)   \"$APP/Contents/MacOS/Reed\""

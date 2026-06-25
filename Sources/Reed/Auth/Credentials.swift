@@ -1,13 +1,13 @@
 import Foundation
 
 /// API client credentials obtained from SoundCloud's `sc-api-auth.mjs` CLI,
-/// read from `~/.config/soundcloudplayer/credentials.json` (kept out of source).
+/// read from `~/.config/reed/credentials.json` (kept out of source).
 ///
 /// ```json
 /// {
 ///   "client_id": "...",
 ///   "client_secret": "...",
-///   "redirect_uri": "soundcloudplayer://callback"
+///   "redirect_uri": "reed://callback"
 /// }
 /// ```
 struct AppCredentials: Codable {
@@ -21,7 +21,7 @@ struct AppCredentials: Codable {
         case redirectURI = "redirect_uri"
     }
 
-    static let defaultRedirectURI = "soundcloudplayer://callback"
+    static let defaultRedirectURI = "reed://callback"
 
     init(clientID: String, clientSecret: String, redirectURI: String) {
         self.clientID = clientID
@@ -42,7 +42,7 @@ struct AppCredentials: Codable {
 
     static var configURL: URL {
         FileManager.default.homeDirectoryForCurrentUser
-            .appendingPathComponent(".config/soundcloudplayer/credentials.json")
+            .appendingPathComponent(".config/reed/credentials.json")
     }
 
     static func load() -> AppCredentials? {

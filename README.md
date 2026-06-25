@@ -1,4 +1,4 @@
-# SoundCloud Menu‑Bar Player
+# Reed 🌱
 
 A tiny **native macOS menu‑bar player for SoundCloud**. Press the icon, and your
 likes, playlists, feed, and the people you follow are one click away — playing
@@ -7,9 +7,12 @@ heavy website, no dock icon.
 
 > **One‑sentence pitch:** SoundCloud, reduced to a personal music launcher that
 > lives in your menu bar.
+>
+> *(Named for the reed — the slender stalk that vibrates to make sound, and looks
+> just like the waveform in the icon.)*
 
 <p align="center">
-  <img src="docs/screenshot.png" width="320" alt="SoundCloud menu-bar player">
+  <img src="docs/screenshot.png" width="320" alt="Reed — SoundCloud menu-bar player">
 </p>
 
 ---
@@ -87,8 +90,9 @@ reach your real library.
 - **macOS 13+**
 - **Swift 6** toolchain — full Xcode *or* just the **Command Line Tools**
   (`xcode-select --install`). No Xcode project needed; it builds with SwiftPM.
-- **Node 18+** — only to fetch API credentials (one‑time).
 - **SoundCloud Artist Pro** — only to use your real account (see above).
+- **Node 18+** — *optional*, only if you use the command‑line credential fallback
+  instead of the in‑app **Connect** flow.
 
 ---
 
@@ -105,12 +109,12 @@ reach your real library.
 ```sh
 git clone https://github.com/<you>/reed
 cd reed
-./scripts/bundle.sh          # SwiftPM build + assembles SoundCloudPlayer.app
-open ./SoundCloudPlayer.app
+./scripts/bundle.sh          # SwiftPM build + assembles Reed.app
+open ./Reed.app
 ```
 
 `bundle.sh` compiles the SwiftPM executable and wraps it in a real `.app` bundle
-(with `Info.plist`, the `soundcloudplayer://` URL scheme, and an ad‑hoc
+(with `Info.plist`, the `reed://` URL scheme, and an ad‑hoc
 signature) — required for media keys, Now Playing, and the OAuth callback.
 
 On first launch with no credentials you get **demo mode** (the menu works,
@@ -125,17 +129,17 @@ The whole credential setup is now in the app — **no Node, no editing JSON.**
 1. **Menu → "Connect SoundCloud…"** → sign in in the browser. The app registers
    itself on your account and saves the credentials for you.
 2. It then opens your [SoundCloud apps page](https://soundcloud.com/you/apps) and
-   copies `soundcloudplayer://callback` to your clipboard. Open your app there,
+   copies `reed://callback` to your clipboard. Open your app there,
    **paste it into Redirect URI, and Save** — this one step is manual because
    SoundCloud's API won't let an app set its own redirect.
 3. **Menu → "Log in to SoundCloud…"** → approve. Done.
 
-Your token lives at `~/Library/Application Support/soundcloudplayer/tokens.json`
+Your token lives at `~/Library/Application Support/reed/tokens.json`
 and refreshes automatically, so you stay signed in across restarts.
 
 > Prefer the command line? You can still run SoundCloud's
 > [`sc-api-auth.mjs`](https://github.com/soundcloud/api/tree/master/scripts) and
-> drop the credentials into `~/.config/soundcloudplayer/credentials.json` (see
+> drop the credentials into `~/.config/reed/credentials.json` (see
 > `credentials.sample.json`).
 
 ---
@@ -146,7 +150,7 @@ and refreshes automatically, so you stay signed in across restarts.
   assembles the bundle so accessory‑app, media‑key, Now Playing, and custom‑URL
   behaviors work.
 - **OAuth 2.1 + PKCE** against `secure.soundcloud.com`, with a **custom‑scheme
-  callback** (`soundcloudplayer://callback`) handled via the app's URL‑scheme
+  callback** (`reed://callback`) handled via the app's URL‑scheme
   registration — no loopback server.
 - **Playback engine** uses two `AVPlayer`s so DJ mode can crossfade; streams are
   resolved per track from `/tracks/{urn}/streams` (HLS AAC) just before play.
@@ -161,7 +165,7 @@ and refreshes automatically, so you stay signed in across restarts.
 ### Project layout
 
 ```
-Sources/SoundCloudPlayer/
+Sources/Reed/
 ├── main.swift, AppDelegate.swift     # entry + menu wiring
 ├── PlaybackEngine.swift              # dual-AVPlayer queue, crossfade, Now Playing
 ├── Track.swift, Playlist.swift, QueueStore.swift
