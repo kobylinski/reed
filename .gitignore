@@ -1,0 +1,14 @@
+.build/
+SoundCloudPlayer.app/
+*.xcodeproj
+.DS_Store
+
+# Never commit real API credentials
+credentials.json
+
+# Downloaded / local helper scripts
+sc-api-auth.mjs
+sc-set-redirect.mjs
+
+# Local tooling
+.claude/
