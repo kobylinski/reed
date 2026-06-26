@@ -202,6 +202,15 @@ credentials.sample.json
 
 ---
 
+## Thanks
+
+Reed is free and built for fun. If it brightened a coding session, a ⭐ on the
+repo genuinely makes my day — and if you really insist on that €3 coffee:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R2P3222TL8)
+
+---
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
