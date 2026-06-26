@@ -102,11 +102,16 @@ play — the subscription is effectively required to use it.
 
 ## Install
 
-### Option A — download (no compiling)
+### Option A — Homebrew (recommended)
 
-1. Grab `Reed.zip` from the [latest release](../../releases/latest), unzip.
-2. The app is ad‑hoc signed, so the first time **right‑click → Open** to get past
-   Gatekeeper. The waveform icon appears in your menu bar.
+```sh
+brew install --cask kobylinski/tap/reed
+```
+
+The app is currently **ad‑hoc signed** (not yet notarized), so the first launch
+needs a one‑time Gatekeeper nudge: **right‑click Reed in Applications → Open →
+Open**. (Or grab `Reed.zip` straight from the
+[latest release](../../releases/latest) and unzip.)
 
 ### Option B — build from source
 
