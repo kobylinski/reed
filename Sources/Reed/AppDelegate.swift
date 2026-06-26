@@ -75,6 +75,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     /// Loads playlist titles for the submenu (demo list when not signed in).
     private func refreshPlaylists() {
+        guard isLive else { playlists = []; return }
         Task { @MainActor in
             do { playlists = try await api.playlists() }
             catch {
@@ -90,6 +91,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     private func refreshFollowing() {
+        guard isLive else { followings = []; return }
         Task { @MainActor in followings = (try? await api.followings()) ?? [] }
     }
 
@@ -100,6 +102,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
 
+        // Not signed in → minimal menu: connect / log in, then quit. Nothing else.
+        guard isLive else {
+            if auth == nil {
+                menu.addItem(item("Connect SoundCloud…", #selector(connectSoundCloud), ""))
+            } else {
+                menu.addItem(item("Log in to SoundCloud…", #selector(login), ""))
+            }
+            menu.addItem(.separator())
+            menu.addItem(item("Quit", #selector(quit), "q"))
+            return
+        }
+
+        // Signed in → full player.
         let panelItem = NSMenuItem()
         let panel = PlayerPanelView(engine: engine)
         panel.onPrev = { [weak self] in self?.engine.previous() }
@@ -113,32 +128,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(panelItem)
         menu.addItem(.separator())
 
-        // Play mode — Likes / Playlist, checkmark only (no icons).
-        let likesItem = item(isLive ? "Likes" : "Likes (demo)", #selector(playLikes), "")
+        // Play mode — Likes / Playlist / Feed / Following, checkmark only.
+        let likesItem = item("Likes", #selector(playLikes), "")
         likesItem.state = (source == .likes) ? .on : .off
         menu.addItem(likesItem)
         menu.addItem(playlistModeItem())
-        let feedItem = item(isLive ? "Feed" : "Feed (demo)", #selector(playFeed), "")
+        let feedItem = item("Feed", #selector(playFeed), "")
         feedItem.state = (source == .feed) ? .on : .off
         menu.addItem(feedItem)
         menu.addItem(followingModeItem())
         menu.addItem(.separator())
 
-        // Account / sign-in.
-        if isLive {
-            if let account {
-                let accountItem = NSMenuItem()
-                let view = AccountView(account: account)
-                view.onLogout = { [weak self] in self?.logout(); self?.menu.cancelTracking() }
-                accountItem.view = view
-                menu.addItem(accountItem)
-            } else {
-                menu.addItem(item("Log out of SoundCloud", #selector(logout), ""))
-            }
-        } else if auth != nil {
-            menu.addItem(item("Log in to SoundCloud…", #selector(login), ""))
+        // Account.
+        if let account {
+            let accountItem = NSMenuItem()
+            let view = AccountView(account: account)
+            view.onLogout = { [weak self] in self?.logout(); self?.menu.cancelTracking() }
+            accountItem.view = view
+            menu.addItem(accountItem)
         } else {
-            menu.addItem(item("Connect SoundCloud…", #selector(connectSoundCloud), ""))
+            menu.addItem(item("Log out of SoundCloud", #selector(logout), ""))
         }
         menu.addItem(.separator())
         menu.addItem(item("Quit", #selector(quit), "q"))
