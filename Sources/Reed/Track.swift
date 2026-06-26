@@ -16,6 +16,9 @@ struct Track: Identifiable, Equatable, Codable {
     /// Whether the signed-in user has liked this track (best-known state).
     var isLiked: Bool = false
 
+    /// The track's page on soundcloud.com (for the "open on SoundCloud" backlink).
+    var permalinkURL: URL? = nil
+
     /// Directly-playable URL, when known up front (mock/test data).
     ///
     /// For live SoundCloud this is a placeholder — the real HLS URL is resolved

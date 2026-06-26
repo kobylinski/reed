@@ -16,6 +16,7 @@ final class MiniPlayerView: NSView {
     private let artistLabel = NSTextField(labelWithString: "")
     private let waveform = WaveformView()
     private let likeButton = NSButton()
+    private let titleLink = NSButton()   // transparent overlay → opens the track on soundcloud.com
 
     private var timer: Timer?
     private var shownTrackID: String?
@@ -82,6 +83,16 @@ final class MiniPlayerView: NSView {
         // Pulled ~6px in from the edge so it isn't glued to the margin.
         layoutButton(likeButton, frame: NSRect(x: width - inset - 18 - 6, y: 5, width: 18, height: 18),
                      symbol: "suit.heart", point: 13, action: #selector(tapLike), mask: [.minXMargin])
+
+        // Transparent overlay over the title → opens the track on soundcloud.com.
+        titleLink.frame = NSRect(x: colX, y: 8, width: colW - 24, height: 15)
+        titleLink.autoresizingMask = [.width]
+        titleLink.isBordered = false
+        titleLink.isTransparent = true
+        titleLink.title = ""
+        titleLink.target = self
+        titleLink.action = #selector(openLink)
+        addSubview(titleLink)
     }
 
     private func configure(_ field: NSTextField, frame: NSRect, font: NSFont, color: NSColor,
@@ -176,6 +187,14 @@ final class MiniPlayerView: NSView {
         likeButton.contentTintColor = liked ? .systemRed : .labelColor
 
         likeButton.isEnabled = hasTrack
+        titleLink.isEnabled = (track?.permalinkURL != nil)
+    }
+
+    override func resetCursorRects() {
+        super.resetCursorRects()
+        if engine?.current?.permalinkURL != nil {
+            addCursorRect(titleLink.frame, cursor: .pointingHand)
+        }
     }
 
     // MARK: Actions
@@ -185,6 +204,9 @@ final class MiniPlayerView: NSView {
         refresh()
     }
     @objc private func tapLike() { engine?.toggleLikeCurrent(); refresh() }
+    @objc private func openLink() {
+        if let url = engine?.current?.permalinkURL { NSWorkspace.shared.open(url) }
+    }
 
     // MARK: Helpers
 

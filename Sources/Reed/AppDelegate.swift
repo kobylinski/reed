@@ -73,7 +73,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         refreshFollowing()
     }
 
-    /// Loads playlist titles for the submenu (demo list when not signed in).
+    /// Loads the signed-in user's playlists for the submenu.
     private func refreshPlaylists() {
         guard isLive else { playlists = []; return }
         Task { @MainActor in

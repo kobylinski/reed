@@ -68,9 +68,6 @@ and a menu‑bar presence that's always one click away.
 - 🔐 Sign in with your SoundCloud account (OAuth 2.1 + PKCE); your avatar,
   username, and a logout live at the bottom of the menu.
 
-Without credentials the app runs in **demo mode** against public HLS test streams,
-so you can try the whole UI before signing in.
-
 ---
 
 ## ⚠️ SoundCloud API access requires **Artist Pro**
@@ -87,8 +84,8 @@ SoundCloud closed public API registration for years, then **reopened it in June
   the paid plan.
 - Verify/activate at **[soundcloud.com/pro](https://soundcloud.com/pro)**.
 
-If you don't have Artist Pro, the app still **runs in demo mode**; it just can't
-reach your real library.
+Without Artist Pro you can't connect an account, so there's nothing for Reed to
+play — the subscription is effectively required to use it.
 
 ---
 
@@ -124,8 +121,7 @@ open ./Reed.app
 (with `Info.plist`, the `reed://` URL scheme, and an ad‑hoc
 signature) — required for media keys, Now Playing, and the OAuth callback.
 
-On first launch with no credentials you get **demo mode** (the menu works,
-playback uses public HLS test streams). Sign in below to use your account.
+On first launch the menu just shows **Connect SoundCloud…** — sign in below.
 
 ---
 
@@ -166,8 +162,8 @@ and refreshes automatically, so you stay signed in across restarts.
   `NSMenu` can host it.
 - **Icons** are Lucide SVGs rendered to template images by a small built‑in
   SVG‑path renderer (`LucideIcons.swift`).
-- A clean `SoundCloudAPI` protocol seam swaps between a **mock** (demo) and the
-  **live** OAuth‑backed client.
+- A clean `SoundCloudAPI` protocol seam keeps the UI decoupled from the **live**
+  OAuth‑backed client (and a no‑op stand‑in while disconnected).
 
 ### Project layout
 

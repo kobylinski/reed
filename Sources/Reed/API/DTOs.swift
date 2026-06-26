@@ -20,6 +20,7 @@ struct TrackDTO: Decodable {
     let access: String?         // playable | preview | blocked
     let user: UserDTO?
     let userFavorite: Bool?     // set on search/single-track fetches
+    let permalinkURL: String?   // the track's page on soundcloud.com
 
     struct UserDTO: Decodable { let username: String? }
 
@@ -27,6 +28,7 @@ struct TrackDTO: Decodable {
         case id, urn, title, duration, access, user
         case artworkURL = "artwork_url"
         case userFavorite = "user_favorite"
+        case permalinkURL = "permalink_url"
     }
 
     /// Maps to the app model. Returns nil for `blocked` tracks (no streaming).
@@ -43,6 +45,7 @@ struct TrackDTO: Decodable {
             artworkURL: artwork.flatMap(URL.init(string:)),
             urn: urn ?? "soundcloud:tracks:\(id)",
             isLiked: userFavorite ?? false,
+            permalinkURL: permalinkURL.flatMap(URL.init(string:)),
             streamURL: URL(string: "about:blank")!   // resolved lazily via /streams
         )
     }
