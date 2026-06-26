@@ -105,13 +105,22 @@ play — the subscription is effectively required to use it.
 ### Option A — Homebrew (recommended)
 
 ```sh
-brew install --cask kobylinski/tap/reed
+brew install --cask --no-quarantine kobylinski/tap/reed
 ```
 
-The app is currently **ad‑hoc signed** (not yet notarized), so the first launch
-needs a one‑time Gatekeeper nudge: **right‑click Reed in Applications → Open →
-Open**. (Or grab `Reed.zip` straight from the
-[latest release](../../releases/latest) and unzip.)
+The `--no-quarantine` flag lets Reed open straight away. It's there because the
+app is currently **ad‑hoc signed** (Developer ID notarization is coming — once
+it lands, this flag won't be needed).
+
+Without the flag you'll get a one‑time Gatekeeper prompt on first launch; clear
+it with either:
+
+```sh
+# right-click Reed in Applications → Open → Open      (GUI), or:
+xattr -dr com.apple.quarantine /Applications/Reed.app
+```
+
+(Or grab `Reed.zip` straight from the [latest release](../../releases/latest).)
 
 ### Option B — build from source
 
