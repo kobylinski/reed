@@ -19,13 +19,20 @@ heavy website, no dock icon.
 
 ## Why
 
+> A few times I've come back to the idea of a SoundCloud player. I was looking
+> for something small and tucked away that just plays my likes during coding
+> sessions — and sometimes goes a little beyond them, using recommendations to
+> find something new. Minimum UI. No extra window, no browser tab. Mac‑native.
+> That small thing makes me happy.
+
 If you use SoundCloud mainly as a **music library** — likes, playlists, the feed,
 artists you follow — the website is a lot: a feed, comments, reposts, uploads, a
 whole social layer, and a browser tab that has to stay open.
 
-This app throws all of that away and keeps the one thing that matters for
-listening: **press a shortcut, pick a source, music starts.** It's built for
-people who already know what they want to hear and want it in the background.
+Reed throws all of that away and keeps the one thing that matters for listening:
+**press a shortcut, pick a source, music starts.** It's built for people who
+already know what they want to hear and want it in the background — with a
+**radio** button for when you want to drift past your likes into something new.
 
 It's a real native app (Swift + AppKit + AVFoundation), so it gets the things a
 browser can't: **media keys, the macOS Now Playing widget, gapless crossfade,**
