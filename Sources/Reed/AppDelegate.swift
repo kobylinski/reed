@@ -71,6 +71,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         refreshPlaylists()
         refreshAccount()
         refreshFollowing()
+
+        maybeSuggestLoginItem()
+    }
+
+    /// On the very first launch, offer to start Reed automatically at login.
+    /// Asked once; afterwards it's managed via System Settings › Login Items.
+    private func maybeSuggestLoginItem() {
+        let key = "didSuggestLoginItem"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+
+        // Nothing to suggest if it's somehow already enabled.
+        guard !LoginItem.isEnabled else { return }
+
+        NSApp.activate(ignoringOtherApps: true)
+        let alert = NSAlert()
+        alert.messageText = "Open Reed at login?"
+        alert.informativeText = "Reed can start automatically and wait quietly in the menu bar each time you log in. You can change this anytime in System Settings › General › Login Items."
+        alert.addButton(withTitle: "Open at Login")
+        alert.addButton(withTitle: "Not Now")
+        if alert.runModal() == .alertFirstButtonReturn {
+            LoginItem.setEnabled(true)
+        }
     }
 
     /// Loads the signed-in user's playlists for the submenu.
