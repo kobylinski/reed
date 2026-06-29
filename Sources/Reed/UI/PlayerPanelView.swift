@@ -53,8 +53,9 @@ final class PlayerPanelView: NSView {
 
         guard hasNav else { return }
 
-        // Divider between the player and the history/toolbar, with 6px margins.
-        let divider = NSView(frame: NSRect(x: 6, y: miniH + dividerGap, width: 300 - 12, height: 1))
+        // Divider between the player and the history/toolbar. Inset to match the
+        // standard NSMenu .separator() items elsewhere in the menu (menuTextInset = 14).
+        let divider = NSView(frame: NSRect(x: 14, y: miniH + dividerGap, width: 300 - 28, height: 1))
         divider.wantsLayer = true
         divider.layer?.backgroundColor = NSColor.separatorColor.cgColor
         divider.autoresizingMask = [.width]
