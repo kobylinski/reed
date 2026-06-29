@@ -197,8 +197,6 @@ credentials.sample.json
 - **Listening only** — no uploads, comments, reposts, messaging, or the social
   feed beyond playing it.
 - **DJ mode is volume crossfade**, not beat‑matched mixing.
-- Distribution would need a real signing identity (full Xcode); the dev build is
-  ad‑hoc signed.
 
 ---
 
