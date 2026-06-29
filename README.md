@@ -108,9 +108,8 @@ play — the subscription is effectively required to use it.
 brew install --cask kobylinski/tap/reed
 ```
 
-Reed is currently **ad‑hoc signed** (Developer ID notarization is on the way), so
-on first launch macOS shows a Gatekeeper prompt once — **right‑click Reed in
-Applications → Open → Open**. After that it launches normally.
+Reed is **signed with a Developer ID certificate and notarized by Apple**, so it
+launches normally — no Gatekeeper workaround needed.
 
 (Or grab `Reed.zip` straight from the [latest release](../../releases/latest).)
 
@@ -124,8 +123,9 @@ open ./Reed.app
 ```
 
 `bundle.sh` compiles the SwiftPM executable and wraps it in a real `.app` bundle
-(with `Info.plist`, the `reed://` URL scheme, and an ad‑hoc
-signature) — required for media keys, Now Playing, and the OAuth callback.
+(with `Info.plist`, the `reed://` URL scheme, and a code signature) — required for
+media keys, Now Playing, and the OAuth callback. Local builds use an ad‑hoc
+signature; release builds are signed with a Developer ID identity and notarized.
 
 On first launch the menu just shows **Connect SoundCloud…** — sign in below.
 
