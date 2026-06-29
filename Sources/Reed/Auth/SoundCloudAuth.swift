@@ -33,6 +33,12 @@ final class SoundCloudAuth {
     private let credentials: AppCredentials
     private var tokens: TokenSet?
 
+    /// The single in-flight refresh, if any. SoundCloud rotates refresh tokens,
+    /// so concurrent refreshes would stampede: the first wins and invalidates the
+    /// token, the rest fail with `invalid_grant`. Coalescing onto one task means
+    /// simultaneous callers all await the same refreshed token.
+    private var refreshTask: Task<String, Error>?
+
     /// Resumed when the `reed://callback` URL is delivered to the app.
     private var pendingRedirect: CheckedContinuation<[String: String], Error>?
 
@@ -104,28 +110,35 @@ final class SoundCloudAuth {
     func validAccessToken() async throws -> String {
         guard let current = tokens else { throw AuthError.notAuthenticated }
         guard current.isExpired else { return current.accessToken }
-        let refreshed = try await requestToken([
-            "grant_type": "refresh_token",
-            "refresh_token": current.refreshToken,
-            "client_id": credentials.clientID,
-            "client_secret": credentials.clientSecret
-        ])
-        store(refreshed)
-        return refreshed.accessToken
+        return try await coalescedRefresh()
     }
 
     /// Force a token refresh regardless of expiry — used when the API returns 401
     /// (e.g. the token was revoked server-side before its nominal expiry).
     func forceRefresh() async throws -> String {
-        guard let current = tokens else { throw AuthError.notAuthenticated }
-        let refreshed = try await requestToken([
-            "grant_type": "refresh_token",
-            "refresh_token": current.refreshToken,
-            "client_id": credentials.clientID,
-            "client_secret": credentials.clientSecret
-        ])
-        store(refreshed)
-        return refreshed.accessToken
+        guard tokens != nil else { throw AuthError.notAuthenticated }
+        return try await coalescedRefresh()
+    }
+
+    /// Runs at most one `refresh_token` grant at a time. If a refresh is already
+    /// in flight, concurrent callers join it and share the result rather than
+    /// firing their own (which would race and fail under refresh-token rotation).
+    private func coalescedRefresh() async throws -> String {
+        if let task = refreshTask { return try await task.value }
+        let task = Task { () throws -> String in
+            defer { refreshTask = nil }
+            guard let current = tokens else { throw AuthError.notAuthenticated }
+            let refreshed = try await requestToken([
+                "grant_type": "refresh_token",
+                "refresh_token": current.refreshToken,
+                "client_id": credentials.clientID,
+                "client_secret": credentials.clientSecret
+            ])
+            store(refreshed)
+            return refreshed.accessToken
+        }
+        refreshTask = task
+        return try await task.value
     }
 
     func logout() {

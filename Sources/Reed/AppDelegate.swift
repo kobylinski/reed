@@ -102,7 +102,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         Task { @MainActor in
             do { playlists = try await api.playlists() }
             catch {
-                playlists = []
+                // Keep the last good list; a transient failure shouldn't blank the
+                // menu. menuNeedsUpdate re-fetches while it's still empty.
                 NSLog("Failed to load playlists: \(error.localizedDescription)")
             }
         }
@@ -137,7 +138,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             return
         }
 
-        // Signed in → full player.
+        // Signed in → full player. Recover from any transient load failure by
+        // re-fetching anything still empty (populates by the next menu open).
+        if playlists.isEmpty { refreshPlaylists() }
+        if followings.isEmpty { refreshFollowing() }
+        if account == nil { refreshAccount() }
+
         let panelItem = NSMenuItem()
         let panel = PlayerPanelView(engine: engine)
         panel.onPrev = { [weak self] in self?.engine.previous() }
