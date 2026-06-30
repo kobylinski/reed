@@ -50,14 +50,17 @@
   .menubar{
     position:sticky;top:0;z-index:60;
     height:var(--bar-h);
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 14px;
     font-size:13px;
     background:rgba(23,18,13,.72);
     backdrop-filter:saturate(160%) blur(14px);
     -webkit-backdrop-filter:saturate(160%) blur(14px);
     border-bottom:1px solid var(--line);
     user-select:none;
+  }
+  /* content shares the page's container so the Reed icon lines up over the mockup */
+  .mb-inner{
+    max-width:var(--maxw);margin:0 auto;height:100%;padding:0 24px;
+    display:flex;align-items:center;justify-content:space-between;
   }
   .mb-left{display:flex;align-items:center;gap:18px;color:var(--muted)}
   .mb-left .apple{font-size:14px;color:var(--ink);opacity:.9}
@@ -86,7 +89,7 @@
   body.panel-open .mb-reed svg path{stroke:#fff}
   @media (max-width:680px){
     .mb-left .mi{display:none}
-    .menubar{padding:0 10px}
+    .mb-inner{padding:0 16px}
   }
 
   /* ---------- waveform mark ---------- */
@@ -155,12 +158,12 @@
 
   /* ---------- the menu-panel mockup ---------- */
   .hero-visual{display:flex;justify-content:flex-end}
-  .panel-wrap{width:296px;display:flex;justify-content:flex-end}
+  .panel-wrap{width:320px;display:flex;justify-content:flex-end}
   .panel{
     --p-bg:rgba(26,27,33,.92);
     --p-line:rgba(255,255,255,.08);
     --p-ink:#ECECEF;--p-mut:#9596A0;--p-heart:#FF5470;
-    position:relative;width:296px;
+    position:relative;width:320px;
     background:var(--p-bg);
     backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);
     border:1px solid var(--p-line);border-radius:14px;
@@ -172,13 +175,14 @@
   }
   .panel .notch{display:none}
 
-  /* docked: panel attaches under the Reed status icon and can open/close */
+  /* docked: panel attaches under the Reed status icon and can open/close.
+     top is fixed under the bar; `right` is set by JS so it lines up beneath Reed. */
   body.docked .panel-wrap{position:relative}      /* height frozen via JS to avoid layout jump */
   body.docked .panel{
-    position:fixed;top:calc(var(--bar-h) + 6px);right:34px;z-index:40;
+    position:fixed;top:calc(var(--bar-h) + 6px);z-index:40;
   }
   body.docked .panel .notch{
-    display:block;position:absolute;top:-6px;right:62px;width:12px;height:12px;
+    display:block;position:absolute;top:-6px;right:15px;width:12px;height:12px;
     background:var(--p-bg);border-left:1px solid var(--p-line);border-top:1px solid var(--p-line);
     transform:rotate(45deg);border-radius:3px 0 0 0;
   }
@@ -308,27 +312,35 @@
 
 <!-- faux macOS menu bar -->
 <div class="menubar">
-  <div class="mb-left">
-    <span class="apple"></span>
-    <span class="app">Finder</span>
-    <span class="mi">File</span>
-    <span class="mi">Edit</span>
-    <span class="mi">View</span>
-    <span class="mi">Go</span>
-  </div>
-  <div class="mb-right">
-    <span class="glyph" aria-hidden="true">
-      <svg width="16" height="12" viewBox="0 0 18 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4.5C5.5 .8 12.5 .8 17 4.5"/><path d="M3.5 7C6.5 4.6 11.5 4.6 14.5 7"/><path d="M6 9.5C7.7 8.3 10.3 8.3 12 9.5"/><circle cx="9" cy="11.6" r=".6" fill="currentColor" stroke="none"/></svg>
-    </span>
-    <span class="glyph" aria-hidden="true">
-      <svg width="24" height="12" viewBox="0 0 26 13" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="1.5" width="21" height="10" rx="3"/><rect x="3" y="3.5" width="13" height="6" rx="1.2" fill="currentColor" stroke="none"/><path d="M24 4.5v4" stroke-linecap="round"/></svg>
-    </span>
-    <span class="mb-reed" id="reedToggle" role="button" tabindex="0" aria-label="Open Reed" title="Reed">
-      <svg width="17" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/>
-      </svg>
-    </span>
-    <span class="mb-clock" id="clock">9:41</span>
+  <div class="mb-inner">
+    <div class="mb-left">
+      <span class="apple"></span>
+      <span class="app">Finder</span>
+      <span class="mi">File</span>
+      <span class="mi">Edit</span>
+      <span class="mi">View</span>
+      <span class="mi">Go</span>
+    </div>
+    <div class="mb-right">
+      <span class="glyph" aria-hidden="true" title="Spotlight">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </span>
+      <span class="glyph" aria-hidden="true" title="Wi-Fi">
+        <svg width="16" height="12" viewBox="0 0 18 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4.5C5.5 .8 12.5 .8 17 4.5"/><path d="M3.5 7C6.5 4.6 11.5 4.6 14.5 7"/><path d="M6 9.5C7.7 8.3 10.3 8.3 12 9.5"/><circle cx="9" cy="11.6" r=".6" fill="currentColor" stroke="none"/></svg>
+      </span>
+      <span class="glyph" aria-hidden="true" title="Battery">
+        <svg width="24" height="12" viewBox="0 0 26 13" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="1.5" width="21" height="10" rx="3"/><rect x="3" y="3.5" width="13" height="6" rx="1.2" fill="currentColor" stroke="none"/><path d="M24 4.5v4" stroke-linecap="round"/></svg>
+      </span>
+      <span class="glyph" aria-hidden="true" title="Control Center">
+        <svg width="15" height="12" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="1" width="18" height="5" rx="2.5"/><rect x="1" y="8" width="18" height="5" rx="2.5"/><circle cx="14.5" cy="3.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="5.5" cy="10.5" r="1.4" fill="currentColor" stroke="none"/></svg>
+      </span>
+      <span class="mb-clock" id="clock">9:41</span>
+      <span class="mb-reed" id="reedToggle" role="button" tabindex="0" aria-label="Open Reed" title="Reed">
+        <svg width="17" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/>
+        </svg>
+      </span>
+    </div>
   </div>
 </div>
 
@@ -575,33 +587,42 @@
     }
   }
 
-  // ---- dock the panel to the menu bar on scroll; toggle like the real app ----
+  // ---- the menu-bar dropdown: rise, stick briefly, then collapse into the icon ----
   const panel = document.getElementById("panel");
   const wrap  = document.getElementById("panelWrap");
   const reed  = document.getElementById("reedToggle");
+  const cont  = document.querySelector("main.wrap");
+  const BAR = 30, DOCK_TOP = BAR + 6, STICK = 90;   // px the panel stays pinned before hiding
   const desktop = () => window.matchMedia("(min-width: 881px)").matches;
-  let docked = false, userOpen = false;
+  let stuck = false, manual = null;                 // manual: user clicked Reed (overrides auto)
 
-  function dock(){
-    if(docked) return;
-    wrap.style.height = panel.offsetHeight + "px";  // freeze layout so nothing jumps
+  // line the fixed panel's right edge up with the Reed icon (both at the container edge)
+  function alignPanel(){ panel.style.right = (window.innerWidth - cont.getBoundingClientRect().right + 24) + "px"; }
+  function setOpen(open){ document.body.classList.toggle("panel-open", open); }
+
+  function enterStuck(){
+    if(stuck) return;
+    wrap.style.height = panel.offsetHeight + "px";  // freeze the hero slot so nothing jumps
     document.body.classList.add("docked");
-    document.body.classList.toggle("panel-open", userOpen);
-    docked = true;
+    stuck = true;
   }
-  function undock(){
-    if(!docked) return;
+  function exitStuck(){
+    if(!stuck) return;
     document.body.classList.remove("docked","panel-open");
-    wrap.style.height = "";
-    userOpen = false;
-    docked = false;
+    wrap.style.height = ""; panel.style.right = ""; manual = null; stuck = false;
   }
+
   function update(){
-    if(!desktop()){ undock(); return; }
+    if(!desktop()){ exitStuck(); return; }
     const top = wrap.getBoundingClientRect().top;
-    // dock once the panel has risen to just beneath the menu bar
-    if(top <= 36) dock(); else undock();
+    if(top > DOCK_TOP){ exitStuck(); return; }      // still in the hero — panel sits open in place
+    enterStuck();
+    alignPanel();
+    const over = DOCK_TOP - top;                     // how far we've scrolled past the dock line
+    const autoOpen = over <= STICK;                  // stay pinned & visible through the sticky zone
+    setOpen(manual !== null ? manual : autoOpen);
   }
+
   let ticking = false;
   window.addEventListener("scroll", () => {
     if(!ticking){ requestAnimationFrame(() => { update(); ticking = false; }); ticking = true; }
@@ -609,9 +630,9 @@
   window.addEventListener("resize", update);
 
   reed.addEventListener("click", () => {
-    if(!docked){ window.scrollTo({top:0, behavior:"smooth"}); return; }
-    userOpen = !userOpen;
-    document.body.classList.toggle("panel-open", userOpen);
+    if(!stuck){ window.scrollTo({top:0, behavior:"smooth"}); return; }  // in hero → scroll up to it
+    manual = !document.body.classList.contains("panel-open");
+    setOpen(manual);
   });
   reed.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); reed.click(); } });
 
